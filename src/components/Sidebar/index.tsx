@@ -253,6 +253,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setOpen, open, conversationsList }) =
                 <ListItemText 
                   primary={
                     <Link to={`/conversation/${converstation.id}`}>
+                    {/* <Link to={`/onboarding/report`}> */}
+
                       <Tooltip 
                         title={converstation.name} 
                         placement='right' 

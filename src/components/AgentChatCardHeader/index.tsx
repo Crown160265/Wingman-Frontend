@@ -14,7 +14,7 @@ interface Props {
 const AgentChatCardHeader: React.FC<Props> = ({ name, date }) => { 
   return (
     <Box sx={{ display: 'flex', marginBottom: '15px' }}>
-        <Avatar alt={name} src={name === 'Wingman' ? AgentAvatar : ''}>{name[0]}</Avatar>
+        <Avatar alt={name} src={name === 'Wingman' ? AgentAvatar : ''} sx={{width:'38px', height:'24px'}}>{name[0]}</Avatar>
         <Typography 
           sx={{ marginTop: 'auto', marginBottom: 'auto', fontWeight: '600', marginLeft: '12px' }}
         >

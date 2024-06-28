@@ -14,7 +14,7 @@ import AgentDateAlertCard from '../../components/AgentDateAlertCard';
 import AgentEventAlertCard from '../../components/AgentEventAlertCard';
 import AgentChartCard from '../../components/AgentChartCard';
 import UserChatInput from '../../components/UserChatInput';
-import AgentReportCard from '../../components/AgentReportCard';
+import AgentReportCard1 from '../../components/AgentReportCard1';
 
 import { getMessages, createMessage, getAgentResponse } from '../../services/api';
 import { Message } from '../../default/types';
@@ -160,7 +160,7 @@ const ConversationPage = () => {
           }
           case 'CHART': return <AgentChartCard key={index} data={JSON.parse(message.content)} date={message.createdAt} />
           case 'RECORD': return <AgentListCard key={index} data={JSON.parse(message.content)} date={message.createdAt} />
-          case 'REPORT': return <AgentReportCard key={index} content={JSON.parse(message.content)} date={message.createdAt} />
+          case 'REPORT': return <AgentReportCard1 key={index} content={JSON.parse(message.content)} date={message.createdAt} />
           default: return null;
         }
       }

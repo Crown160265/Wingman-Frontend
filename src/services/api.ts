@@ -7,7 +7,6 @@ import {
 import { Conversation, Message, User } from '../default/types';
 import { API_URL } from '../default/config';
 import { alertsData, reportsData } from './data';
-import { Match } from '@testing-library/react';
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -60,6 +59,25 @@ interface MatchTeamMembersResponse {
     atlassianUsername?: string,
     score?: number,
   ]
+}
+
+interface reportDataResponse {
+  // conversationId:string;
+  components:any;
+}
+
+export async function reportData(organizationId: string, userId:string) {
+  try {
+    const response: AxiosResponse<reportDataResponse> = await axiosInstance.post('/onboarding/report', {
+      organizationId,
+      userId,
+    });
+
+    return response.data;
+
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
 
 export async function matchTeamMembers(userId: string, organizationId: string) {

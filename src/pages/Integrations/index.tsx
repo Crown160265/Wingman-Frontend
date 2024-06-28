@@ -14,7 +14,6 @@ import {
   getCommunicationManagementIntegration,
   getSoftwareManagementIntegration,
   getProjectManagementIntegration,
-  matchTeamMembers,
 } from '../../services/api';
 
 const IntegrationsPage = () => {
@@ -31,12 +30,7 @@ const IntegrationsPage = () => {
   const handleIntegrations = async () => {
       console.log("isOneConnected: ", isOneConnected);
       if(isOneConnected === true) {
-        
-        const userId = localStorage.getItem('userId')??'';
-        const organizationId = localStorage.getItem('organizationId')??'';
-
-        const response = await matchTeamMembers(userId, organizationId);
-        navigate('/onboarding/teams', {state:{responseData:response}})
+        navigate('/onboarding/report')
       };
   };
 

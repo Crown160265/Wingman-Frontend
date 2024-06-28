@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation, redirect, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import ChatsPage from './pages/Chats';
 import ConversationPage from './pages/Conversation';
 import AlertsPage from './pages/Alerts';
@@ -13,6 +13,7 @@ import NotificationsPage from './pages/Notifications';
 import { useUser } from './context/UserContext';
 import { useEffect } from 'react';
 import SignInPage from './pages/SignIn';
+import ReportPage from './pages/Report';
 
 const AppRoutes = () => {
   const isAuth = localStorage.getItem('isAuth') === 'true' ? true : false;
@@ -41,6 +42,7 @@ const AppRoutes = () => {
             <Route path="/conversation/:conversationId" element={<ConversationPage />} />
             <Route path="/onboarding/integrations" element={<IntegrationsPage />} />
             <Route path="/onboarding/notifications" element={<NotificationsPage />} />
+            <Route path="/onboarding/report" element={<ReportPage />} />
             <Route path="/alerts" element={<AlertsPage />} />
             <Route path="/onboarding/teams" element={<TeamsPage />} />
             <Route path="/jira-login-callback" element={<IntegrationCallbackPage />} />

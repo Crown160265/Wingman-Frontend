@@ -52,6 +52,7 @@ const Layout: React.FC<LayoutProps>  = ({ title, children, containerRef }) => {
     const fetchConversations = async () => {
       try {
         if(!user) return;
+        console.log('userId: ', user.id);
         const response = await getConversations(user.id);
         setConversationsList(response);
       } catch (error) {
