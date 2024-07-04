@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/system';
 import { Grid } from '@mui/material';
@@ -9,18 +9,12 @@ import { HelloTypography, TitleTypography, DesTypography } from '../../component
 import { TeamSectionTitleTypography } from '../../components/CustomComponents/TeamTypography';
 import { OverflowBox } from '../../components/CustomComponents/NotificationBox';
 import { personalData } from '../../services/data';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import { IOSSwitch } from '../../components/CustomComponents/IOSSwitch';
 import  Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
 import { ButtonPositionBox } from '../../components/CustomComponents/NotificationBox';
 import { matchTeamMembers } from '../../services/api';
+import { GitHubSelect } from './TeamComponent/GitHubSelect';
+import { TeamSelect } from './TeamComponent/TeamSelect';
 
 import avatar1 from '../../assets/images/Avatar1.svg';
 import avatar2 from '../../assets/images/Avatar2.png';
@@ -29,7 +23,6 @@ import avatar4 from '../../assets/images/Avatar4.svg';
 import avatar5 from '../../assets/images/Avatar5.svg';
 import avatar6 from '../../assets/images/Avatar6.svg';
 import slackIcon from '../../assets/images/Slack.svg';
-import github from '../../assets/images/Github.svg';
 
 type TeamDataResponse = {
   atlassianTeamMembers: any;
@@ -51,8 +44,8 @@ type TeamDataResponse = {
 const TeamsPage : React.FC = () => {
   
   const navigate = useNavigate();
-  const organizationId = localStorage.getItem('organizationId')??'';
-  const userId = localStorage.getItem('userId')??'';
+  const organizationId = localStorage.getItem('organizationId')??"";
+  const userId = localStorage.getItem('userId')??"";
   const firstName = localStorage.getItem('firstName');
   const [responseTeamData, setResponseTeamData] = useState<TeamDataResponse>();
   const [isLoading, setIsLoading] = useState(false);
@@ -60,34 +53,24 @@ const TeamsPage : React.FC = () => {
   let PersonalData = personalData().personalData;
   const [data, setData] = useState(PersonalData);
   const avatars = [avatar1, avatar2, avatar3, avatar4, avatar5, avatar6];
-  const [open, setOpen] = useState(false);
-  const [indexNumber, setIndexNumber] = useState(0);
+
+
+  /* Check States and Functions */
 
   const initializeCheckedState = () => {
     const initialCheckedState: Record<number, boolean> = {};
-    for (let i = 0; i <= PersonalData.length; i++) {
+    for (let i = 0; i <= data.length; i++) {
       initialCheckedState[i] = false;
     }
     return initialCheckedState;
   };
+
   const [checked, setChecked] = useState<Record<number, boolean>>(initializeCheckedState());
-  
-  const [switchChecked, setSwitchChecked] = useState<Record<number, boolean>>({});
-  const [selectedOption, setSelectedOption] = useState<string[]>( PersonalData.map((item:any) => item.GithubUser[0]) );
-  const [selectedTeamOption, setSelectedTeamOption] = useState<string[]>( PersonalData.map((item:any) => item.team[0]) );
 
   let len = 0;
-  for(let i = 1; i <= PersonalData.length; i++) if(checked[i] === false) { len = i; break;}
+  for(let i = 1; i <= data.length; i++) if(checked[i] === false) { len = i; break;}
   if( len===0 ) checked[0]=true; 
   else checked[0]=false;
-
-  const handleClickOpen = (Id:number) => {
-    setIndexNumber(Id);
-    setOpen(true);
-  }
-  const handleClose = () => {
-    setOpen(false);
-  }
   
   const handleChange = (Id:number) => {
     setChecked((prevState) => ({
@@ -95,7 +78,7 @@ const TeamsPage : React.FC = () => {
       [Id]:!prevState[Id],
       }))
   }
-
+  
   const handleChangeAll = () => {
     let bool = true;
     if (checked[0]===true) bool = false; else bool = true;
@@ -105,7 +88,10 @@ const TeamsPage : React.FC = () => {
     });
     setChecked(updatedCheckedState);
   }
+  
+  /* Role Switch States */
 
+  const [switchChecked, setSwitchChecked] = useState<Record<number, boolean>>(initializeCheckedState());
 
   const handleSwitchChange = (Id:number) => {
     setSwitchChecked((prevState) => ({
@@ -113,29 +99,19 @@ const TeamsPage : React.FC = () => {
       [Id]:!prevState[Id],
       }))
   }
-  
-  const handleSelectChange = (Id:number, value:string) => {
-    const prevString = [...selectedOption];
-    prevString[Id] = value;
-    setSelectedOption(prevString);
-  };
- 
-  const handleSelectTeamChange = (Id:number, value:string) => {
-    if(value) {
-    const prevString = [...selectedTeamOption];
-    prevString[Id] = value;
-    setSelectedTeamOption(prevString);
-    }
-  };
+
+  /* Next Button Function */
 
   const handleTeams = async () => {
       navigate('/');
   };
 
+  /* FetchData */
+
   const fetchData = async() => {
     try{
-        const data = await matchTeamMembers(organizationId, userId);
-        setResponseTeamData(data);
+        const responseData = await matchTeamMembers(organizationId, userId);
+        setResponseTeamData(responseData);
         setIsLoading(true);
     }catch(error){
         console.error('Error fetching data:', error);
@@ -147,11 +123,11 @@ const TeamsPage : React.FC = () => {
     fetchData();
   },[]);
 
-  console.log("responseTeamData: ", responseTeamData);
-  
+
   return (
     (
       isLoading ? (
+
       <div className='mainlayout'>
         <TeamMainBox>
           <HelloTypography>Hello, {firstName}</HelloTypography>
@@ -251,165 +227,15 @@ const TeamsPage : React.FC = () => {
                       <TeamSectionTitleTypography>{item.SlackUser}</TeamSectionTitleTypography>
                     </TeamSectionTitleBox>
                   </Grid>
+
                   <Grid item xs={1.7}>
-                    <TeamSectionTitleBox >
-                      <div>
-                      {
-                        item.GithubUser.length!==0 && 
-                        <Select 
-                          value={selectedOption[index]} 
-                          onChange={(event) => handleSelectChange(index, event.target.value)}
-                          sx={{
-                            width:'120px', 
-                            height: '25px',
-                            borderRadius: '20px', 
-                            backgroundColor:'white', 
-                            '& .MuiOutlinedInput-notchedOutline': {
-                              borderColor: 'blue'
-                            },
-                            '& .Mui-selected': {
-                              backgroundColor: 'white',
-                            },
-                          }}
-                          MenuProps={{
-                            PaperProps: {
-                              sx: {
-                                marginTop: '10px',
-                                backgroundColor: 'rgba(240, 242, 245, 1)',
-                                borderRadius:'20px',
-                                '& .MuiMenuItem-root.Mui-selected': {
-                                    backgroundColor: 'white',
-                                }
-                              }
-                            }
-                          }}
-                        >
-                          {
-                            item.GithubUser.map((item1:any, index1:number) => (
-                            <MenuItem key={index1} value={item1}
-                              sx={{
-                                backgroundColor:'white', 
-                                height:'25px', 
-                                borderRadius:'10px',
-                                margin:'0px 10px 4px 10px' 
-                              }}
-                            > 
-                              <TeamSectionBox>
-                                <img src={github} alt="GitHub" style={{marginLeft:'-6px',paddingRight:'6px'}} />
-                                <TeamSectionTitleTypography>{item1}</TeamSectionTitleTypography>
-                              </TeamSectionBox>
-                            </MenuItem>
-                            
-                          ))}
-                          
-                        </Select>
-                      }
-                      </div>
-                    </TeamSectionTitleBox>
+                    <GitHubSelect item={item} index={index} data={data}/>
                   </Grid>
+
                   <Grid item xs={1.7}>
-                  <TeamSectionTitleBox >
-                    <div>
-                    {
-                      item.team.length!==0 && 
-                      <Select 
-                        value={selectedTeamOption[index]} 
-                        onChange={(event) => handleSelectTeamChange(index, event.target.value)}
-                        sx={{
-                            width:'120px', 
-                            height: '25px', 
-                            borderRadius: '20px',
-                            backgroundColor:'white', 
-                            '& .MuiOutlinedInput-notchedOutline': {
-                              borderColor: 'blue'
-                            },
-                            '& .Mui-selected': {
-                              backgroundColor: 'white',
-                            },
-                        }}
-                        MenuProps={{
-                          PaperProps: {
-                            sx: {
-                              marginTop: '10px',
-                              backgroundColor: 'rgba(240, 242, 245, 1)',
-                              borderRadius:'20px',
-                              '& .MuiMenuItem-root.Mui-selected': {
-                                  backgroundColor: 'white',
-                              }
-                            }
-                          }
-                        }}
-                      >
-                        {
-                          item.team.map((item1:any, index1:number) => ( 
-                          <MenuItem key={index1} value={item1} 
-                            sx={{
-                              backgroundColor:'white', 
-                              height:'25px', 
-                              borderRadius:'10px',
-                              margin:'0px 10px 4px 10px' 
-                              }}
-                          > 
-                            <TeamSectionBox>
-                              <TeamSectionTitleTypography>{item1}</TeamSectionTitleTypography>
-                            </TeamSectionBox>
-                          </MenuItem>
-                        ))}
-                        <MenuItem onClick={()=> handleClickOpen(index)} key={item.team.length} 
-                          value={item.team[item.team.length]} 
-                          sx={{
-                            backgroundColor:'white', 
-                            height:'25px', 
-                            borderRadius:'10px',
-                            margin:'0px 10px 4px 10px'
-                            }}
-                        >
-                          <TeamSectionTitleTypography>+ New Team</TeamSectionTitleTypography>
-                        </MenuItem>
-                      </Select>
-                    }
-                      <Dialog 
-                        open={open} 
-                        onClose={handleClose}
-                        hideBackdrop={true}
-                        PaperProps={{
-                          component: 'form',
-                          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-                            event.preventDefault();
-                            const formData = new FormData(event.currentTarget);
-                            const formJson = Object.fromEntries((formData as any).entries());
-                            const teamName = formJson.teamName;
-                            let len = data[indexNumber].team.length;
-                            data[indexNumber].team[len] = teamName;
-                            setData(data);
-                            handleSelectTeamChange(indexNumber, teamName);
-                            handleClose();
-                          },
-                        }}
-                      >
-                        <DialogTitle>Add Team</DialogTitle>
-                        <DialogContent>
-                          <DialogContentText>Please enter the team name here.</DialogContentText>
-                            <TextField
-                              autoFocus
-                              required
-                              margin="dense"
-                              id="teamName"
-                              name="teamName"
-                              label="Team Name"
-                              type="text"
-                              fullWidth
-                              variant="standard"
-                            />
-                          </DialogContent>
-                          <DialogActions>
-                            <button onClick={handleClose}>Cancel</button>
-                            <button type="submit">Create</button>
-                          </DialogActions>
-                      </Dialog>
-                    </div>
-                  </TeamSectionTitleBox>
+                    <TeamSelect item={item} index={index} data={data} setData={setData} />
                   </Grid>
+
                   <Grid item xs={1.7}>
                     {item.role.length!==0 && 
                       <TeamSectionTitleBox>
@@ -425,8 +251,8 @@ const TeamsPage : React.FC = () => {
                 </Grid>
               </Box>
             ))} 
-            
           </OverflowBox>
+
           <ButtonPositionBox>
             <Button sx={{ 
               display: 'flex',

@@ -46,7 +46,7 @@ const AgentReportCard1: React.FC<Props> = ({ content, date }) => {
       <ReportTypography>
         {content.issuesWithoutDescription.message}:
       </ReportTypography>
-      {content.issuesWithoutDescription.pullRequests.map((issue:any, index:number) => {
+      {content.issuesWithoutDescription.issues.map((issue:any, index:number) => {
         return(
           <Link key={index} target="_blank" rel="noopener noreferrer" to={issue.link}>
             <ReportTypography  sx={listStyles1}>
