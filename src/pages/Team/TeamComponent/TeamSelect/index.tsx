@@ -8,128 +8,89 @@ import SearchIcon from '../../../../assets/images/SearchIcon.png';
 import CancelIcon from '../../../../assets/images/CancelIcon.png';
 import CheckIcon from '../../../../assets/images/Check.png';
 
-type HoverState = boolean[][];
+type HoverState = boolean[];
 
-type TeamData = {
+type MatchedTeamDataType = {
     avatar:string;
     name:string;
     JiraUser: string;
     SlackUser:string;
-    GithubUser: string[];
+    GithubUser: string;
     team:string[];
     role:string;
 }[]
 
-type Props = {
-  item:any;
+type TeamProps = {
   index:number;
-  data:TeamData;
-  setData:React.Dispatch<React.SetStateAction<TeamData>>;
+  data:MatchedTeamDataType;
+  setData:Function;
 };
 
-export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
+export const TeamSelect: React.FC<TeamProps> = ({index, data, setData}) => {
 
-  const initializeString = () => {
-    const initialString: string[] = [];
-    for (let i = 0; i <= data.length; i++) {
-      initialString[i] = "";
-    }
-    return initialString;
-  };
+  let item = data[index];
 
-  const [inputLetter1, setInputLetter1] = useState<string[]>(initializeString());
+  const [inputLetter, setInputLetter] = useState<string>("");
   const [filteredItemCount, setFilteredItemCount] = useState(false);
 
-  const handleCancelIcon = (Id:number) => {
-      setInputLetter1((prevState) => ({
-        ...prevState,
-        [Id]:"",
-        }));
+  const handleCancelIcon = () => {
+    setInputLetter("");
     setFilteredItemCount(false);
   }
 
-  const filter = (Id:number, inputLetter:string, section:string) => {
-    if(section === "team"){
-      return data[Id].team.filter((teamItem) =>
+  const filter = (inputLetter:string) => {
+      return item.team.filter((teamItem:any) =>
         teamItem.toLowerCase().includes(inputLetter.toLowerCase()));
-    }
-    else { 
-      return data[Id].GithubUser.filter((teamItem) =>
-        teamItem.toLowerCase().includes(inputLetter.toLowerCase()));
-    }
-    // else return null;
   }
 
-  const handleInputChange2 = (event:React.ChangeEvent<HTMLInputElement>, Id:number,section:string) => {
+  const handleInputChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     
-    setInputLetter1((prevState) => ({
-      ...prevState,
-      [Id]:event.target.value,
-      }));
+    setInputLetter(event.target.value);
     
-    const filteredItem = filter(Id, event.target.value, section);
+    const filteredItem = filter(event.target.value);
     filteredItem.length === 0 ? setFilteredItemCount(true) : setFilteredItemCount(false);
-  }
-
-  const handleInputChange1 = (Id:number, section:string) => (e:React.ChangeEvent<HTMLInputElement>) => {
-    handleInputChange2(e, Id, section);
   }
 
   const initializeHoveredState = ():HoverState => {
     const initialHoveredState: HoverState = [];
-    for (let i = 0; i < data.length; i++) {
-      initialHoveredState[i] = [];
-      for(let j = 0; j < 100; j++){
-        initialHoveredState[i][j] = false;
+      for(let i = 0; i < item.team.length; i++){
+        initialHoveredState[i] = false;
       }
-    }
     return initialHoveredState;
   };
 
-  const [isHovered,setIsHovered] = useState<HoverState>(() => initializeHoveredState());
+  const [isHovered, setIsHovered] = useState<HoverState>(() => initializeHoveredState());
 
-  const handleIsHover = (Id1: number, Id2: number) => {
-    setIsHovered((prevState) => {
-      const newState = prevState.map((row, i) =>
-        i === Id1
-          ? row.map((value, j) => (j === Id2 ? true : value))
-          : row
-      );
-      return newState;
-    });
+  const handleIsHover = (Id: number) => {
+    setIsHovered((prevState) => ({
+      ...prevState,
+      [Id]:true,
+    }));
   };
-  const handleNoIsHover = (Id1:number,Id2:number) => {
-    setIsHovered((prevState) => {
-      const newState = prevState.map((row, i) =>
-        i === Id1
-          ? row.map((value, j) => (j === Id2 ? false : value))
-          : row
-      );
-      return newState;
-    });
+  const handleNoIsHover = (Id:number) => {
+    setIsHovered((prevState) => ({
+      ...prevState,
+      [Id]:false,
+    }));
   }
 
-  const [selectedTeamOption, setSelectedTeamOption] = useState<string[]>( data.map((item:any) => item.team[0]));
-
-  const handleSelectTeamChange = (Id:number, value:string) => {
-    if(value) {
-    const prevString = [...selectedTeamOption];
-    prevString[Id] = value;
-    setSelectedTeamOption(prevString);
-    }
+  const [selectedOption, setSelectedOption] = useState<string>(item.team[0]);
+  const handleSelectTeamChange = (value:string) => {
+    setSelectedOption(value);
   };
 
-  const handleAddTeams = (team:string, Id:number) => {
+  const handleAddTeams = (team:string) => {
 
-    let len = data[Id].team.length;
-    data[Id].team[len] = team;
+    let len = item.team.length;
+    data[index].team[len] = team;
     setData(data);
-    setInputLetter1((prevState) => ({
-      ...prevState,
-      [Id]:"",
-      }));
+    setInputLetter("");
     setFilteredItemCount(false);
+    setIsHovered((prevState) => ({
+      ...prevState,
+      [len]:false,
+    }));
   }
 
     return (
@@ -137,8 +98,8 @@ export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
       {
         item.team.length!==0 && 
         <Select 
-          value={selectedTeamOption[index]} 
-          onChange={(event) => handleSelectTeamChange(index, event.target.value)}
+          value={selectedOption} 
+          onChange={(event) => handleSelectTeamChange(event.target.value)}
           sx={{
               width:'120px', 
               height: '25px', 
@@ -160,7 +121,7 @@ export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
                 border: '1px solid rgb(191,191,191)',
                 marginTop: '7px',
                 marginLeft: '37px',
-                scrollbarWidth: 'thin',
+                paddingBottom:'10px',
                 scrollbarColor: 'transparent transparent',
                 display:'flex',
                 overflow:'visible',
@@ -173,9 +134,16 @@ export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
                 },
               }
             },
+            MenuListProps: {
+              style:{
+                overflow:'scroll',
+                scrollbarWidth:'none',
+                scrollbarColor:'transparent transparent',
+              }
+            }
           }}          
         >
-            <TeamSectionTitleTypography sx={{paddingLeft:'10px'}}>TEAM</TeamSectionTitleTypography>
+            <TeamSectionTitleTypography sx={{paddingLeft:'10px', fontWeight:'600'}}>TEAM</TeamSectionTitleTypography>
             <Divider/>
             <MenuItem>
               <TextField 
@@ -188,9 +156,9 @@ export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
                     </InputAdornment>
                   ),
                   endAdornment: (
-                    inputLetter1[index].length !== 0 && (
+                    inputLetter.length !== 0 && (
                       <InputAdornment position="end">
-                        <IconButton onClick={()=>handleCancelIcon(index)}>
+                        <IconButton onClick={handleCancelIcon}>
                           <img src={CancelIcon} alt='CancelIcon'/>
                         </IconButton>
                       </InputAdornment>
@@ -199,8 +167,8 @@ export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
                 }}
                 placeholder="Search..."
                 variant="standard"
-                value={inputLetter1[index]}
-                onChange={handleInputChange1(index,"team")}
+                value={inputLetter}
+                onChange={handleInputChange}
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.stopPropagation()}
               />
@@ -210,7 +178,7 @@ export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
             />
             {
                 item.team.map((teamItem:any, teamIndex:number) => {
-                  if (teamItem.toLowerCase().includes(inputLetter1[index].toLowerCase())) {  
+                  if (teamItem.toLowerCase().includes(inputLetter.toLowerCase())) {  
                     return (   
                       
                     <MenuItem 
@@ -224,11 +192,11 @@ export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
                         paddingLeft:'25px',
                         position:'relative',
                         }}
-                      onMouseEnter={() => handleIsHover(index,teamIndex)}
-                      onMouseLeave={() => handleNoIsHover(index,teamIndex)}
+                      onMouseEnter={() => handleIsHover(teamIndex)}
+                      onMouseLeave={() => handleNoIsHover(teamIndex)}
                     > 
                       {
-                        isHovered[index][teamIndex] && selectedTeamOption[index] !== teamItem &&
+                        isHovered[teamIndex] && selectedOption !== teamItem &&
                             <img src={CheckIcon} alt="CheckIcon" style={{position:'absolute', marginLeft:'-17px'}}/>
                       }  
                       <TeamSectionBox>
@@ -246,11 +214,19 @@ export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
                   <TeamSectionTitleTypography>No results found</TeamSectionTitleTypography>
                 </TeamSectionBox>
             }
-            <Box onMouseDown={() => handleAddTeams(inputLetter1[index], index)} sx={{marginTop:'auto'}}>
+            <Box onMouseDown={() => handleAddTeams(inputLetter)} sx={{marginTop:'auto'}}>
               {filteredItemCount && 
                 <>
                 <Divider />
-                <TeamSectionTitleTypography sx={{paddingLeft:'10px', overflowX:'scroll', width:'170px'}}>Create Team {inputLetter1[index]}</TeamSectionTitleTypography>
+                <TeamSectionTitleTypography 
+                  sx={{
+                    paddingLeft:'10px', 
+                    paddingTop:'5px', 
+                    marginBottom:'-11px', 
+                    overflowX:'scroll', 
+                    width:'170px'
+                  }}>
+                    Create Team <span style={{fontWeight:'600'}}>{inputLetter}</span></TeamSectionTitleTypography>
                 </>
               }
             </Box>

@@ -8,7 +8,7 @@ import { TeamSectionTitleBox, TeamSectionBox } from '../../components/CustomComp
 import { HelloTypography, TitleTypography, DesTypography } from '../../components/CustomComponents/NotificationTypography';
 import { TeamSectionTitleTypography } from '../../components/CustomComponents/TeamTypography';
 import { OverflowBox } from '../../components/CustomComponents/NotificationBox';
-import { personalData } from '../../services/data';
+import { TeamData } from '../../services/data';
 import { IOSSwitch } from '../../components/CustomComponents/IOSSwitch';
 import  Button from '@mui/material/Button';
 import { ButtonPositionBox } from '../../components/CustomComponents/NotificationBox';
@@ -27,16 +27,20 @@ import slackIcon from '../../assets/images/Slack.svg';
 type TeamDataResponse = {
   atlassianTeamMembers: any;
   count:number;
-  githubTeamMembers:any;
+  githubTeamMembers:[
+    id:string,
+    link:string,
+    username:string,
+  ];
   matchedTeamMembers:[
-    githubUserLink: string,
-    githubUserId: number,
-    githubUsername: string,
+    atlassianUsername: string,
+    atlassianUserId: string,
+    atlassianUserLink: string,
     email: string,
-    name?: string,
-    atlassianUserId?: number,
-    atlassianUserLink?: string,
-    atlassianUsername?: string,
+    githubUsername: string,
+    githubUserLink: string,
+    githubUserId: string,
+    name: string,
     score?: number,
   ]
 }
@@ -50,8 +54,10 @@ const TeamsPage : React.FC = () => {
   const [responseTeamData, setResponseTeamData] = useState<TeamDataResponse>();
   const [isLoading, setIsLoading] = useState(false);
 
-  let PersonalData = personalData().personalData;
-  const [data, setData] = useState(PersonalData);
+  let MatchedTeamMembers = TeamData().matchedTeamMembers;
+  const [data, setData] = useState(MatchedTeamMembers);
+  const GithubTeamMembers = TeamData().githubTeamMembers;
+  const [githubData, setGithubData] = useState(GithubTeamMembers);
   const avatars = [avatar1, avatar2, avatar3, avatar4, avatar5, avatar6];
 
 
@@ -229,11 +235,11 @@ const TeamsPage : React.FC = () => {
                   </Grid>
 
                   <Grid item xs={1.7}>
-                    <GitHubSelect item={item} index={index} data={data}/>
+                    <GitHubSelect item={item} githubData={githubData}/>
                   </Grid>
 
                   <Grid item xs={1.7}>
-                    <TeamSelect item={item} index={index} data={data} setData={setData} />
+                    <TeamSelect index={index} data={data} setData={setData}/>
                   </Grid>
 
                   <Grid item xs={1.7}>
@@ -242,7 +248,7 @@ const TeamsPage : React.FC = () => {
                         <IOSSwitch
                           checked={switchChecked[index]} 
                           onChange={() => handleSwitchChange(index)}
-                          sx={{m: 1}} 
+                          sx={{m:1}} 
                         />
                         <TeamSectionTitleTypography>{item.role}</TeamSectionTitleTypography>
                       </TeamSectionTitleBox>

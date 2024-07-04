@@ -14,7 +14,7 @@ export function TeamSectionTitleTypography(props: TeamSectionTitleTypographyProp
       sx={{
         fontFamily: 'Inter-Regular',
         fontSize: '12px',
-        fontWeight: '600',
+        fontWeight: '400',
         lineHeight: '24px',
         ...sx,
       }}

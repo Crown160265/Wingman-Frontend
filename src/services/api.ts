@@ -47,16 +47,22 @@ interface RegisterUserResponse {
 interface MatchTeamMembersResponse {
   atlassianTeamMembers: any;
   count:number;
-  githubTeamMembers:any;
+
+  githubTeamMembers:[
+    id: string,
+    link: string,
+    username: string,
+  ];
+
   matchedTeamMembers:[
-    githubUserLink: string,
-    githubUserId: number,
-    githubUsername: string,
+    atlassianUsername: string,
+    atlassianUserId: string,
+    atlassianUserLink: string,
     email: string,
-    name?: string,
-    atlassianUserId?: number,
-    atlassianUserLink?: string,
-    atlassianUsername?: string,
+    githubUsername: string,
+    githubUserLink: string,
+    githubUserId: string,
+    name: string,
     score?: number,
   ]
 }

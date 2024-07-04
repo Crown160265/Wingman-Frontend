@@ -231,17 +231,62 @@ export function alertsData(bug:number, tickets:number, hours:number, hours1:numb
   );
 }
 
-
-export function personalData(){
+export function TeamData(){
   return(
     {
-      personalData: [       
+      atlassianTeamMembers:[],
+      count:0,
+      githubTeamMembers: [
+        {
+          id:'',
+          link: '',
+          username: 'Scarlettj',
+        },
+        {
+          id:'',
+          link: '',
+          username: 'Dicap',
+        },
+        {
+          id:'',
+          link: '',
+          username: 'Patrick001',
+        },
+        {
+          id:'',
+          link: '',
+          username: 'Tobey',
+        },
+        {
+          id:'',
+          link: '',
+          username: 'Kevin',
+        },
+        {
+          id:'',
+          link: '',
+          username: 'Brad',
+        }
+      ],
+      matchedTeamMembers: [
+        // {
+        //   githubUserLink:'',
+        //   githubUserId:'',
+        //   githubUsername:'Scarlettj',
+        //   email:'scarlettjohansson@gmail.com',
+        //   name: 'Scalett Johansson',
+        //   atlassianUserId:'',
+        //   atlassianUserLink:'',
+        //   atlassianUsername:'Scalett Johansson',
+        //   score:0.4,
+        // },
+
         {
           avatar: 'avatar1',
           name: 'Scalett Johansson',
           JiraUser: 'scarlettjohansson@gmail.com',
           SlackUser: '@scarlett',
-          GithubUser: ['Scarlettj','User1', 'User2',],
+          GithubUser: 'Scarlettj',
           team: ['My team', 'DevOps Team'],
           role: 'Manager',
         },
@@ -250,16 +295,16 @@ export function personalData(){
           name: 'Leonardo DiCaprio',
           JiraUser: 'leonardodicaprio@gmail.com',
           SlackUser: '@Leonardo',
-          GithubUser: ['Dicap','Leonardo','User3', 'User4',],
+          GithubUser: 'Dicap',
           team: ['My team', 'DevOps Team'],
           role: 'Manager',
         },
         {
           avatar: 'avatar3',
           name: 'Patrick Bateamn',
-          JiraUser: '',
+          JiraUser: 'patrickbateam@gmail.com',
           SlackUser: '@Patrick',
-          GithubUser: ['Patrick001','User5', 'User6', 'User7',],
+          GithubUser: 'Patrick001',
           team: ['My team', 'DevOps Team'],
           role: 'Manager',
         },
@@ -268,7 +313,7 @@ export function personalData(){
           name: 'Tobey Meguire',
           JiraUser: 'tobeymaguire@gmail.com',
           SlackUser: '@Tobey',
-          GithubUser: ['Tobey','User8', 'User9',],
+          GithubUser: 'Tobey',
           team: ['My team', 'DevOps Team'],
           role: 'Manager',
         },
@@ -277,7 +322,7 @@ export function personalData(){
           name: 'Kevin Hart',
           JiraUser: 'kevinhart@gmail.com',
           SlackUser: '',
-          GithubUser: [],
+          GithubUser: 'Kevin',
           team: [],
           role: '',
         },
@@ -286,11 +331,10 @@ export function personalData(){
           name: 'Brad Pitt',
           JiraUser: 'bradpitt@gmail.com',
           SlackUser: '',
-          GithubUser: [],
+          GithubUser: 'Brad',
           team: [],
           role: '',
         },
-
       ],
     }
   );
