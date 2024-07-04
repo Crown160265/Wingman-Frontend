@@ -57,12 +57,12 @@ export const GitHubSelect: React.FC<Props> = ({item, index, data}) => {
 
   const filter = (Id:number, inputLetter:string, section:string) => {
     if(section === "team"){
-      return data[Id].team.filter((item1) =>
-        item1.toLowerCase().includes(inputLetter.toLowerCase()));
+      return data[Id].team.filter((githubItem) =>
+        githubItem.toLowerCase().includes(inputLetter.toLowerCase()));
     }
     else { 
-      return data[Id].GithubUser.filter((item1) =>
-        item1.toLowerCase().includes(inputLetter.toLowerCase()));
+      return data[Id].GithubUser.filter((githubItem) =>
+        githubItem.toLowerCase().includes(inputLetter.toLowerCase()));
     }
   }
 
@@ -199,12 +199,12 @@ export const GitHubSelect: React.FC<Props> = ({item, index, data}) => {
                 sx={{marginTop:'0px !important'}}
               />
               {
-                  item.GithubUser.map((item1:any, index1:number) => {
-                    if (item1.toLowerCase().includes(inputLetter2[index].toLowerCase())) {
+                  item.GithubUser.map((githubItem:any, githubIndex:number) => {
+                    if (githubItem.toLowerCase().includes(inputLetter2[index].toLowerCase())) {
                       return (
                       <MenuItem 
-                        key={index1} 
-                        value={item1} 
+                        key={githubIndex} 
+                        value={githubItem} 
                         sx={{
                           backgroundColor:'white', 
                           height:'25px', 
@@ -213,15 +213,15 @@ export const GitHubSelect: React.FC<Props> = ({item, index, data}) => {
                           paddingLeft:'25px',
                           display:'flex',
                           }}
-                        onMouseEnter={() => handleGithubIsHover(index,index1)}
-                        onMouseLeave={() => handleGithubNoIsHover(index,index1)}
+                        onMouseEnter={() => handleGithubIsHover(index,githubIndex)}
+                        onMouseLeave={() => handleGithubNoIsHover(index,githubIndex)}
                       > 
                         {
-                          githubIsHovered[index][index1] && selectedOption[index] !== item1 &&
+                          githubIsHovered[index][githubIndex] && selectedOption[index] !== githubItem &&
                           <img src={CheckIcon} alt="CheckIcon" style={{position:'absolute', marginLeft:'-17px'}}/>
                         }
                         <TeamSectionBox>
-                          <TeamSectionTitleTypography>{item1}</TeamSectionTitleTypography>
+                          <TeamSectionTitleTypography>{githubItem}</TeamSectionTitleTypography>
                         </TeamSectionBox>
                       </MenuItem>
                     )}

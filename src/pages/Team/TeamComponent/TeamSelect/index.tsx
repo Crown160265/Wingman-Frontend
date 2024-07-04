@@ -50,12 +50,12 @@ export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
 
   const filter = (Id:number, inputLetter:string, section:string) => {
     if(section === "team"){
-      return data[Id].team.filter((item1) =>
-        item1.toLowerCase().includes(inputLetter.toLowerCase()));
+      return data[Id].team.filter((teamItem) =>
+        teamItem.toLowerCase().includes(inputLetter.toLowerCase()));
     }
     else { 
-      return data[Id].GithubUser.filter((item1) =>
-        item1.toLowerCase().includes(inputLetter.toLowerCase()));
+      return data[Id].GithubUser.filter((teamItem) =>
+        teamItem.toLowerCase().includes(inputLetter.toLowerCase()));
     }
     // else return null;
   }
@@ -209,13 +209,13 @@ export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
               sx={{marginTop:'0px !important'}}
             />
             {
-                item.team.map((item1:any, index1:number) => {
-                  if (item1.toLowerCase().includes(inputLetter1[index].toLowerCase())) {  
+                item.team.map((teamItem:any, teamIndex:number) => {
+                  if (teamItem.toLowerCase().includes(inputLetter1[index].toLowerCase())) {  
                     return (   
                       
                     <MenuItem 
-                      key={index1} 
-                      value={item1} 
+                      key={teamIndex} 
+                      value={teamItem} 
                       sx={{
                         backgroundColor:'white', 
                         height:'25px', 
@@ -224,15 +224,15 @@ export const TeamSelect: React.FC<Props> = ({item, index, data, setData}) => {
                         paddingLeft:'25px',
                         position:'relative',
                         }}
-                      onMouseEnter={() => handleIsHover(index,index1)}
-                      onMouseLeave={() => handleNoIsHover(index,index1)}
+                      onMouseEnter={() => handleIsHover(index,teamIndex)}
+                      onMouseLeave={() => handleNoIsHover(index,teamIndex)}
                     > 
                       {
-                        isHovered[index][index1] && selectedTeamOption[index] !== item1 &&
+                        isHovered[index][teamIndex] && selectedTeamOption[index] !== teamItem &&
                             <img src={CheckIcon} alt="CheckIcon" style={{position:'absolute', marginLeft:'-17px'}}/>
                       }  
                       <TeamSectionBox>
-                        <TeamSectionTitleTypography>{item1}</TeamSectionTitleTypography>
+                        <TeamSectionTitleTypography>{teamItem}</TeamSectionTitleTypography>
                       </TeamSectionBox>
                     </MenuItem>
                   )}
